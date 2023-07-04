@@ -1,10 +1,30 @@
-version: '3'
+version: '3.7'
+
 services:
-  postgres:
-    image: 'postgres:9.6.1'
+  api:
+    container_name: projeto_nest
+    build: .
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules 
     ports:
-      - '5432:5432'
+      - '3002:3002'
+    networks:
+      - docker-network
+    depends_on:
+      - postgres
+  
+  postgres:
+    container_name: projeto_nest_db
+    image: postgres:13-alpine
+    
+    networks:
+      - docker-network
     environment:
       POSTGRES_USER: 'test'
       POSTGRES_PASSWORD: 'test'
       POSTGRES_DB: 'test'
+    ports:
+      - '5432:5432'
+networks:
+  docker-network:
